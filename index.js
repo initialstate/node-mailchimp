@@ -153,29 +153,30 @@ Mailchimp.prototype.request = function (options, done) {
         password : mailchimp.__api_key
       },
       data : body,
-      qs : query,
+      params : query,
       headers : headers,
       responseType: 'json',
     }, function (err, response) {
 
       if (err) {
         var error = new Error(err);
+        console.log('Error', error.response);
         error.response = response;
-        error.statusCode = response ? response.statusCode : undefined;
+        error.status = response ? response.status : undefined;
         reject(error)
         return;
       }
 
-      if (response.statusCode < 200 || response.statusCode > 299) {
-        var error = Object.assign(new Error(response.body ? response.body.detail : response.statusCode), response.body || response)
+      if (response.status < 200 || response.status > 299) {
+        var error = Object.assign(new Error(response.data ? response.data : response.status), response.data || response)
         error.response = response;
-        error.statusCode = response.statusCode;
+        error.status = response.status;
         reject(error);
         return;
       }
 
-      var result = response.body || {};
-      result.statusCode = response.statusCode;
+      var result = response.data || {};
+      result.statusCode = response.status;
 
       resolve(result)
     })
