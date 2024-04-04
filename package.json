@@ -26,9 +26,9 @@
   },
   "homepage": "https://github.com/thorning/node-mailchimp#readme",
   "dependencies": {
+    "axios": "^1.6.8",
     "bluebird": "^3.4.0",
     "lodash": "^4.17.14",
-    "request": "^2.88.0",
     "tar": "^4.0.2"
   },
   "devDependencies": {
