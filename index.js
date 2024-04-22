@@ -109,6 +109,8 @@ Mailchimp.prototype.patch = function (options, body, done) {
 }
 
 Mailchimp.prototype.request = function (options, done) {
+  console.log(JSON.stringify({ request_options: options }));
+  
   var mailchimp = this;
   var promise = new Promise(function(resolve, reject) {
     if (!options) {
@@ -145,6 +147,18 @@ Mailchimp.prototype.request = function (options, done) {
       return;
     }
 
+    let axios_req = {
+      method : method,
+      url : mailchimp.__base_url + path,
+      data : body,
+      params : query,
+      headers : headers,
+      responseType: 'json',
+    }
+
+    // omitted auth in log
+    console.log({ axios_req });
+
     axios({
       method : method,
       url : mailchimp.__base_url + path,
@@ -160,12 +174,14 @@ Mailchimp.prototype.request = function (options, done) {
 
       if (err) {
         var error = new Error(err);
-        console.log('Error', error.response);
+        console.log('Mailchimp Error', error.response);
         error.response = response;
         error.status = response ? response.status : undefined;
         reject(error)
         return;
       }
+
+      console.log('Mailchimp Response: ', response)
 
       if (response.status < 200 || response.status > 299) {
         var error = Object.assign(new Error(response.data ? response.data : response.status), response.data || response)
