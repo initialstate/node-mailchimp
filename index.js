@@ -57,7 +57,7 @@ var formatPath = function (path, path_params) {
 
 
 Mailchimp.prototype.post = function (options, body, done) {
-  options = _.clone(options) || {};
+  options = _.clone(options) || {};
 
   if (_.isString(options)) {
     options = {
@@ -83,7 +83,7 @@ Mailchimp.prototype.post = function (options, body, done) {
 }
 
 Mailchimp.prototype.patch = function (options, body, done) {
-  options = _.clone(options) || {};
+  options = _.clone(options) || {};
 
   if (_.isString(options)) {
     options = {
@@ -120,7 +120,7 @@ Mailchimp.prototype.request = function (options, done) {
 
     var path = formatPath(options.path, options.path_params);
     var method = options.method || 'get';
-    var body = options.body || {};
+    var body = options.body || {};
     var params = options.params;
     var query = options.query;
 
@@ -130,7 +130,7 @@ Mailchimp.prototype.request = function (options, done) {
 
     // Mailchimp does not respect on the language set in requests bodies for confirmation emails on new subscribers (and maybe other)
     // A workaround is to make sure the language header matches
-    var language = options.language || body.language || null;
+    var language = options.language || body.language || null;
     if (language) {
       headers['Accept-Language'] = language;
     }
