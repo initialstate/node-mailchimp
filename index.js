@@ -57,7 +57,7 @@ var formatPath = function (path, path_params) {
 
 
 Mailchimp.prototype.post = function (options, body, done) {
-  options = _.clone(options) || {};
+  options = _.clone(options) || {};
 
   if (_.isString(options)) {
     options = {
@@ -83,7 +83,7 @@ Mailchimp.prototype.post = function (options, body, done) {
 }
 
 Mailchimp.prototype.patch = function (options, body, done) {
-  options = _.clone(options) || {};
+  options = _.clone(options) || {};
 
   if (_.isString(options)) {
     options = {
@@ -109,6 +109,8 @@ Mailchimp.prototype.patch = function (options, body, done) {
 }
 
 Mailchimp.prototype.request = function (options, done) {
+  console.log(JSON.stringify({ request_options: options }));
+  
   var mailchimp = this;
   var promise = new Promise(function(resolve, reject) {
     if (!options) {
@@ -118,17 +120,17 @@ Mailchimp.prototype.request = function (options, done) {
 
     var path = formatPath(options.path, options.path_params);
     var method = options.method || 'get';
-    var body = options.body || {};
+    var body = options.body || {};
     var params = options.params;
     var query = options.query;
 
     var headers = {
-      'User-Agent' : 'mailchimp-api-v3 : https://github.com/thorning/node-mailchimp'
+      'User-Agent' : 'mailchimp-api-v3 : https://github.com/initialstate/node-mailchimp'
     };
 
     // Mailchimp does not respect on the language set in requests bodies for confirmation emails on new subscribers (and maybe other)
     // A workaround is to make sure the language header matches
-    var language = options.language || body.language || null;
+    var language = options.language || body.language || null;
     if (language) {
       headers['Accept-Language'] = language;
     }
@@ -145,6 +147,18 @@ Mailchimp.prototype.request = function (options, done) {
       return;
     }
 
+    let axios_req = {
+      method : method,
+      url : mailchimp.__base_url + path,
+      data : body,
+      params : query,
+      headers : headers,
+      responseType: 'json',
+    }
+
+    // omitted auth in log
+    console.log({ axios_req });
+
     axios({
       method : method,
       url : mailchimp.__base_url + path,
@@ -160,12 +174,14 @@ Mailchimp.prototype.request = function (options, done) {
 
       if (err) {
         var error = new Error(err);
-        console.log('Error', error.response);
+        console.log('Mailchimp Error', error.response);
         error.response = response;
         error.status = response ? response.status : undefined;
         reject(error)
         return;
       }
+
+      console.log('Mailchimp Response: ', response)
 
       if (response.status < 200 || response.status > 299) {
         var error = Object.assign(new Error(response.data ? response.data : response.status), response.data || response)
