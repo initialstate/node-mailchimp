@@ -50,6 +50,8 @@ var formatPath = function (path, path_params) {
     return _path.replace('{'+param+'}', value);
   }, path)
 
+  console.log({ mailchimp_path: path })
+
   return path;
 
 }
@@ -57,6 +59,12 @@ var formatPath = function (path, path_params) {
 
 
 Mailchimp.prototype.post = function (options, body, done) {
+
+  console.log(JSON.stringify({ 
+    post_options: options,
+    post_body: body 
+  }));
+
   options = _.clone(options) || {};
 
   if (_.isString(options)) {
@@ -83,6 +91,11 @@ Mailchimp.prototype.post = function (options, body, done) {
 }
 
 Mailchimp.prototype.patch = function (options, body, done) {
+  console.log(JSON.stringify({ 
+    patch_options: options,
+    patch_body: body 
+  }));
+
   options = _.clone(options) || {};
 
   if (_.isString(options)) {
@@ -206,6 +219,7 @@ Mailchimp.prototype.request = function (options, done) {
         done(null, result)
       })
       .catch(function (err) {
+        console.log({ mailchimp_err: err })
         done(err);
       })
     return null;

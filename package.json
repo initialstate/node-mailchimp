@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://thorning@github.com/thorning/node-mailchimp.git"
+    "url": "git+https://initialstate@github.com/initialstate/node-mailchimp.git"
   },
   "keywords": [
     "mailchimp",
@@ -19,12 +19,12 @@
     "wrapper",
     "mailchimp api"
   ],
-  "author": "Andreas Thorning",
+  "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/thorning/node-mailchimp/issues"
+    "url": "https://github.com/initialstate/node-mailchimp/issues"
   },
-  "homepage": "https://github.com/thorning/node-mailchimp#readme",
+  "homepage": "https://github.com/initialstate/node-mailchimp#readme",
   "dependencies": {
     "axios": "^1.6.8",
     "bluebird": "^3.4.0",
