@@ -67,7 +67,7 @@ This library also supports easy usage of the mailchimp batch operations, enablin
 
 ## Installation
 
-`$ npm install mailchimp-api-v3`
+`$ npm install initialstate/mailchimp-api-v3`
 
 ## Usage
 
