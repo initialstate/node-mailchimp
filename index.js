@@ -60,9 +60,9 @@ var formatPath = function (path, path_params) {
 
 Mailchimp.prototype.post = function (options, body, done) {
 
-  console.log(JSON.stringify({ 
+  console.log(JSON.stringify({
     post_options: options,
-    post_body: body 
+    post_body: body
   }));
 
   options = _.clone(options) || {};
@@ -91,9 +91,9 @@ Mailchimp.prototype.post = function (options, body, done) {
 }
 
 Mailchimp.prototype.patch = function (options, body, done) {
-  console.log(JSON.stringify({ 
+  console.log(JSON.stringify({
     patch_options: options,
-    patch_body: body 
+    patch_body: body
   }));
 
   options = _.clone(options) || {};
@@ -123,7 +123,7 @@ Mailchimp.prototype.patch = function (options, body, done) {
 
 Mailchimp.prototype.request = function (options, done) {
   console.log(JSON.stringify({ request_options: options }));
-  
+
   var mailchimp = this;
   var promise = new Promise(function(resolve, reject) {
     if (!options) {
@@ -163,6 +163,10 @@ Mailchimp.prototype.request = function (options, done) {
     let axios_req = {
       method : method,
       url : mailchimp.__base_url + path,
+      auth : {
+        user : 'any',
+        password : mailchimp.__api_key
+      },
       data : body,
       params : query,
       headers : headers,
@@ -172,43 +176,34 @@ Mailchimp.prototype.request = function (options, done) {
     // omitted auth in log
     console.log({ axios_req });
 
-    axios({
-      method : method,
-      url : mailchimp.__base_url + path,
-      auth : {
-        user : 'any',
-        password : mailchimp.__api_key
-      },
-      data : body,
-      params : query,
-      headers : headers,
-      responseType: 'json',
-    }, function (err, response) {
+    axios(axios_req)
+        .then((response) => {
 
-      if (err) {
-        var error = new Error(err);
-        console.log('Mailchimp Error', error.response);
-        error.response = response;
-        error.status = response ? response.status : undefined;
-        reject(error)
-        return;
-      }
+            console.log('Mailchimp Response: ', response)
 
-      console.log('Mailchimp Response: ', response)
+            if (response.status < 200 || response.status > 299) {
+                var error = Object.assign(new Error(response.data ? response.data : response.status), response.data || response)
+                error.response = response;
+                error.status = response.status;
+                reject(error);
+                return;
+            }
 
-      if (response.status < 200 || response.status > 299) {
-        var error = Object.assign(new Error(response.data ? response.data : response.status), response.data || response)
-        error.response = response;
-        error.status = response.status;
-        reject(error);
-        return;
-      }
-
-      var result = response.data || {};
-      result.statusCode = response.status;
-
-      resolve(result)
-    })
+            var result = response.data || {};
+            result.statusCode = response.status;
+            resolve(result)
+        })
+        .catch((err) => {
+            console.log('Mailchimp Error: ', err)
+            if (err) {
+                var error = new Error(err);
+                console.log('Mailchimp Error', error.response);
+                error.response = response;
+                error.status = response ? response.status : undefined;
+                reject(error)
+                return;
+            }
+        });
 
   })
 
