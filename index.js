@@ -195,14 +195,7 @@ Mailchimp.prototype.request = function (options, done) {
         })
         .catch((err) => {
             console.log('Mailchimp Error: ', err)
-            if (err) {
-                var error = new Error(err);
-                console.log('Mailchimp Error', error.response);
-                error.response = response;
-                error.status = response ? response.status : undefined;
-                reject(error)
-                return;
-            }
+            reject(err)
         });
 
   })
